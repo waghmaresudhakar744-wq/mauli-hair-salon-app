@@ -17,9 +17,8 @@ jobs:
 
       - name: Extract Android project
         run: |
-          unzip -o MauliHairSalon_CloudBuild_Project.zip
-          echo "PROJECT_DIR=$GITHUB_WORKSPACE/MauliHairSalonAndroid" >> $GITHUB_ENV
-
+          unzip -o .github/workflows/MauliHairSalon_CloudBuild_Project.zip
+          
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -32,11 +31,13 @@ jobs:
           gradle-version: '8.9'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
 
       - name: Build APK
         run: |
-          cd "$PROJECT_DIR"
+          cd MauliHairSalonAndroid
           gradle --no-daemon assembleDebug
 
       - name: Upload APK
@@ -44,3 +45,5 @@ jobs:
         with:
           name: Mauli-Hair-Salon-APK
           path: MauliHairSalonAndroid/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
